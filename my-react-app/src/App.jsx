@@ -2,6 +2,7 @@
 
 import './App.css'
 import Add from './components/Add';
+import Task from './task/Task';
 
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
 
 return (
     <>
-     <Add  />
+     {/* <Add  /> */}
+     <Task />
   
     </>
   )

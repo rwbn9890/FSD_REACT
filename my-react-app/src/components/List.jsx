@@ -22,7 +22,6 @@ function updateTask(id){
   return (
     <div>
     <div className="container border">
-      
       {
         list?.map((ele) => (
           <div className={ele.status ? "row bg-success-subtle" : "row bg-danger-subtle"} key={ele.id}>
