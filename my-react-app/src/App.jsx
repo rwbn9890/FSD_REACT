@@ -1,32 +1,47 @@
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
-// import { Child } from './components/Child'
-import  Parent from './components/Parent'
-import { Props } from './props/Props'
+import User from './user'
 
 function App() {
 
-  const [show, setShow] = useState(true)
+const [status, setStatus] =useState(false)
 
-  console.log(show)
+const [count, setCount] = useState(1)
+const [data, setData] = useState([])
 
+
+
+
+const fetchData = () => {
+  fetch(`https://randomuser.me/api??page=${count}&results=8`)
+  .then((res) => res.json())
+  .then((res) => setData(res.results))
+}
+
+
+// const handleCount = () => {
+//   setCount(count+1)
+// }
+
+
+useEffect(() =>{
+  // handleCount()
+  fetchData()
+},[count, status])
 
 return (
     <>
-    <div className='border p-5'>
-      <input type={show ? "password" : "text"} />
-      <button className='btn btn-sm ' style={{transform:"translateX(-100%)"}} onClick={ () => setShow(!show) }>
-       {
-        !show ?
-        <i class="fa-solid fa-eye"></i>
-        :
-        <i class="fa-solid fa-eye-slash"></i>
-       } 
-        </button>
-    </div>
-      {/* <Parent /> */}
-      <Props/>
+    <User data={data} />
+  <button onClick={() => {setStatus(!status)}}>{status ? "True" : "False"} - {count}</button>
+  <nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li onClick={() => setCount(count-1)} class="page-item"><a class="page-link" href="#">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="#">{count}</a></li>
+    <li onClick={() => setCount(count+1)} class="page-item"><a class="page-link" href="#">Next</a></li>
+  </ul>
+</nav>
+   
     </>
   )
 }
