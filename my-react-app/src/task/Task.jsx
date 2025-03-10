@@ -21,11 +21,12 @@ function Task() {
 
         let newTAsk =  taskList.find(ele => ele.id == ele_id)
 
-        newTAsk.todos.map(el=> el.id == el_id ? {...el, status : !el.status} : el)
-        
-       let newtasklist =  taskList.map((ele) => ele.id== ele_id ? ele = newTAsk : ele)
+        newTAsk.todos = newTAsk.todos.map((el) => el.id ==el_id ? {...el, status: !el.status} : el)
 
-        setTaskList(newtasklist)
+
+    let newTaskList = taskList.map((ele)=> ele.id == ele_id ? ele = newTAsk : ele)
+
+        setTaskList(newTaskList)
     }
 
     function handleTodo(ele, index){
@@ -40,6 +41,8 @@ function Task() {
             }
 
             setTodo(newTodo)
+
+            setCount(index+2)
 
     }
 console.log(todo)
@@ -93,8 +96,8 @@ console.log(todo)
 
   return (
     <>
-        <AddTask handleTask={handleTask} setTask={setTask} task={task} count={count} setCount={setCount} handleTodo={handleTodo} statusTodo ={statusTodo} />
-        <List taskList={taskList} delTask={delTask} editTask={editTask} />
+        <AddTask handleTask={handleTask} setTask={setTask} task={task} count={count} setCount={setCount} handleTodo={handleTodo} />
+        <List taskList={taskList} delTask={delTask} editTask={editTask}  statusTodo ={statusTodo} />
     </>
   )
 }
