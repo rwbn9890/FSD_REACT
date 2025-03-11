@@ -16,12 +16,10 @@ const AddTask = ({handleTask, setTask, task, count, setCount, handleTodo}) => {
                 </div>
                   
                     <div className="row px-4">
-                     {  [...Array(count)].map((ele, index) =>(
+                     { [...Array(count)].map((ele, index) =>(
                             <div className= "col-12 px-3 d-flex" >
                                  <Button className='btn btn-light btn-sm p-0 '  >📝</Button>
                                     <input className='form-control form-control-sm border-0 border-top' onChange={(e) => {handleTodo(e.target.value, index)}} placeholder={ index + " todo no"} />
-
-                                   
                             </div>
                        ))}
                        

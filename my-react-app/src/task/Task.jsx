@@ -1,7 +1,7 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import AddTask from './AddTask'
 
-import { v4 as uuidv4 } from 'uuid';
+import { stringify, v4 as uuidv4 } from 'uuid';
 import List from './List';
 
 
@@ -12,6 +12,26 @@ function Task() {
     const [count, setCount] = useState(0);
     const [todo, setTodo] = useState([])
 
+
+    const getLocal = () =>{
+        let list = JSON.parse(localStorage.getItem("taskList"))
+        setTaskList(list)
+    }
+ 
+  
+
+    useEffect(() => {
+        getLocal()
+    },[])// [tasklist]
+
+
+
+    const setLocal = (list) =>{
+        localStorage.setItem("taskList", JSON.stringify(list))
+        console.log(list)
+    }
+
+    // setLocal(taskList)
 
 
     function statusTodo(ele_id, el_id){
@@ -25,9 +45,10 @@ function Task() {
 
 
     let newTaskList = taskList.map((ele)=> ele.id == ele_id ? ele = newTAsk : ele)
-
         setTaskList(newTaskList)
+        setLocal(taskList)
     }
+
 
     function handleTodo(ele, index){
             // todo.push(e)
@@ -57,10 +78,13 @@ console.log(todo)
             id: uuidv4()
         }
 
-        // taskList.push(obj);
+        taskList.push(obj);
     //    taskList  = [...taskList, obj]
+            setLocal(taskList)
+        // setTaskList([...taskList, obj])
 
-        setTaskList([...taskList, obj])
+      
+        // getLocal()
 
         setTask("")
 
@@ -76,6 +100,8 @@ console.log(todo)
        const update = taskList.filter((ele)=> ele.id !=id)
 
        setTaskList(update)
+       setLocal(update)
+    //    getLocal()
     }
 
 
@@ -88,6 +114,8 @@ console.log(todo)
          const update = taskList.map(ele=> ele.id == id ? {...ele, status: !ele.status} : ele);
 
          setTaskList(update)
+         setLocal(update)
+        //  getLocal()
 
     }
 
