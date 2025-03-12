@@ -10,7 +10,8 @@ function Task() {
     const [task, setTask] = useState("");
     const [taskList, setTaskList] = useState([])
     const [count, setCount] = useState(0);
-    const [todo, setTodo] = useState([])
+    const [todo, setTodo] = useState([]);
+    const [upId, setUpId] = useState("")
 
 
     const getLocal = () =>{
@@ -18,13 +19,10 @@ function Task() {
         setTaskList(list)
     }
  
-  
 
     useEffect(() => {
         getLocal()
     },[])// [tasklist]
-
-
 
     const setLocal = (list) =>{
         localStorage.setItem("taskList", JSON.stringify(list))
@@ -42,7 +40,6 @@ function Task() {
         let newTAsk =  taskList.find(ele => ele.id == ele_id)
 
         newTAsk.todos = newTAsk.todos.map((el) => el.id ==el_id ? {...el, status: !el.status} : el)
-
 
     let newTaskList = taskList.map((ele)=> ele.id == ele_id ? ele = newTAsk : ele)
         setTaskList(newTaskList)
@@ -64,9 +61,8 @@ function Task() {
             setTodo(newTodo)
 
             setCount(index+2)
-
     }
-console.log(todo)
+
 
 
     function handleTask(){
@@ -77,10 +73,21 @@ console.log(todo)
             todos:todo,
             id: uuidv4()
         }
-
-        taskList.push(obj);
-    //    taskList  = [...taskList, obj]
+        if(upId)
+        {
+            console.log(upId)
+          let newt =  taskList.map((ele) => ele.id == upId ? ele = obj : ele)
+            setLocal(newt)
+            console.log(newt)
+        }
+        else{
+            taskList.push(obj);
             setLocal(taskList)
+        }
+
+       
+    //    taskList  = [...taskList, obj]
+            
         // setTaskList([...taskList, obj])
 
       
@@ -101,6 +108,7 @@ console.log(todo)
 
        setTaskList(update)
        setLocal(update)
+      
     //    getLocal()
     }
 
@@ -110,7 +118,7 @@ console.log(todo)
 
 
     function editTask(id){
-     
+        
          const update = taskList.map(ele=> ele.id == id ? {...ele, status: !ele.status} : ele);
 
          setTaskList(update)
@@ -120,12 +128,26 @@ console.log(todo)
     }
 
 
+function updateTask(element){
+
+
+
+    setCount(element.todos.length)
+    setTask(element.task);
+
+    setUpId(element.id)
+    setTodo(element.todos)
+  
+
+}
+
+
         // console.log(taskList)
 
   return (
     <>
-        <AddTask handleTask={handleTask} setTask={setTask} task={task} count={count} setCount={setCount} handleTodo={handleTodo} />
-        <List taskList={taskList} delTask={delTask} editTask={editTask}  statusTodo ={statusTodo} />
+        <AddTask handleTask={handleTask} setTask={setTask} task={task} count={count} setCount={setCount} handleTodo={handleTodo} todo={todo} />
+        <List taskList={taskList} delTask={delTask} editTask={editTask} updateTask={updateTask}  statusTodo ={statusTodo} upId={upId} setTask={setTask} handleTodo={handleTodo} />
     </>
   )
 }
