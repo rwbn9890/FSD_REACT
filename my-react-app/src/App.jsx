@@ -1,6 +1,8 @@
 
 import React, { useEffect, useState } from 'react'
 import './App.css'
+import MultiRangeSlider from "multi-range-slider-react";
+
 
 
 function App() {
@@ -14,22 +16,25 @@ const [price, setPrice] = useState("")
 const [desc, setDesc] = useState("")
 const [editId, setEditId] = useState("");
 
-
+const [sort, setSort] = useState("")
+const [page, setPage] = useState(1)
+const [minValue, setMinValue] = useState(0)
+const [maxValue, setMaxValue] = useState(10)
 
 
 
 
 let prod_url= `http://localhost:8000/prod`
-let users_url = `http://localhost:8000/users/`
+let users_url = `http://localhost:8000/users`
 
 
 
   const fetchAndUpdateData = async (url, obj) =>{
     setLoading(true);
    try { 
-      const res = await fetch(url, obj);
+      const res = await fetch(url+`?_page=${page}&_per_page=5&_sort=price&price_gte=${minValue}&price_lte=${maxValue}`, obj);
       const prod = await res.json();
-      setData(prod)
+      setData(prod.data)
    } catch (error) {
       setError(error)
       console.log("message: " + error)
@@ -40,7 +45,7 @@ let users_url = `http://localhost:8000/users/`
 
   useEffect(() => {
     fetchAndUpdateData(users_url, {})
-  }, [])
+  }, [sort, page, minValue, maxValue])
 
   console.log(data)
 
@@ -55,6 +60,8 @@ let obj = {
   price,
   images:[image]
 }
+
+
 
     await fetch(`http://localhost:8000/users/${editId}`, {
       method: editId ? "PATCH" : "POST",
@@ -98,6 +105,17 @@ let obj = {
   }
 
 
+
+  
+const handleInput = (e) => {
+ 
+  setMinValue(e.minValue)
+  setMaxValue(e.maxValue)
+}
+
+
+
+
 return (
     <>
     <div className="container">
@@ -108,6 +126,9 @@ return (
       <input type="text" onChange={(e) => setDesc(e.target.value)} value={desc} className='form-control' />
       <button onClick={() => handleSubmit()}>Add</button>
       <div className="row">
+
+        <button onClick={() => setSort("asc")}>Asc</button>
+        <button onClick={() => setSort("desc")}>Desc</button>
         { 
         loading ? (
           <h2>loading...!</h2>
@@ -120,7 +141,7 @@ return (
               <img src={ele.images[0]} alt="" className="card-img-top" />
               <div className="card-body">
                 <h5 className="card-title">{ele.title}</h5>
-                <p className="card-content"></p>
+                <p className="card-content">{ele.price}</p>
 
                 <button className="btn btn-light" onClick={() => delProduct(ele.id)}>Delete</button>
                 <button className="btn btn-light" onClick={() => editProduct(ele)}>Edit</button>
@@ -131,8 +152,25 @@ return (
         )
          
         }
-      </div>
+      </div>  
+   <button className="btn btn-light" onClick={() => setPage(page-1)}>prev</button>
+    <button>{page}</button>
+    <button className="btn btn-light" onClick={() => setPage(page+1)}>next</button>
     </div>
+
+        <input onChange={(e) => setLimit(e.target.value)} min="0" max="10" type="range" />
+        <MultiRangeSlider
+        ruler={false}
+        stepOnly={false}
+			min={0}
+			max={10}
+			step={1}
+			minValue={minValue}
+			maxValue={maxValue}
+			onInput={(e) => {
+				handleInput(e);
+			}}
+		/>
     </>
   )
 }
