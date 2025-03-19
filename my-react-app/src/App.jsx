@@ -10,6 +10,8 @@ const [data, setData] =useState([])
 const [loading, setLoading] = useState(false)
 const [error, setError] = useState(null)
 
+const [search, setSearch] = useState("")
+
 const [title, setTitle] = useState("")
 const [image, setImage] = useState("")
 const [price, setPrice] = useState("")
@@ -17,9 +19,10 @@ const [desc, setDesc] = useState("")
 const [editId, setEditId] = useState("");
 
 const [sort, setSort] = useState("")
+const [sortRate, setSortRate] = useState("")
 const [page, setPage] = useState(1)
 const [minValue, setMinValue] = useState(0)
-const [maxValue, setMaxValue] = useState(10)
+const [maxValue, setMaxValue] = useState(100000)
 
 
 
@@ -32,9 +35,11 @@ let users_url = `http://localhost:8000/users`
   const fetchAndUpdateData = async (url, obj) =>{
     setLoading(true);
    try { 
-      const res = await fetch(url+`?_page=${page}&_per_page=5&_sort=price&price_gte=${minValue}&price_lte=${maxValue}`, obj);
+      const res = await fetch(url+`?_page=${page}&_per_page=5&price_gte=${minValue}&price_lte=${maxValue}&_sort=${sort},${sortRate}&_embed==admin`, obj);
       const prod = await res.json();
       setData(prod.data)
+
+    console.log(prod.data)
    } catch (error) {
       setError(error)
       console.log("message: " + error)
@@ -45,7 +50,7 @@ let users_url = `http://localhost:8000/users`
 
   useEffect(() => {
     fetchAndUpdateData(users_url, {})
-  }, [sort, page, minValue, maxValue])
+  }, [sort, page, minValue, maxValue, search, sortRate])
 
   console.log(data)
 
@@ -118,6 +123,7 @@ const handleInput = (e) => {
 
 return (
     <>
+    <input onChange={(e) => setSearch(e.target.value)} />
     <div className="container">
       <h1 className='bg-amber-300 hover:text-white flex'>this is tailwind</h1>
       <input type="text" onChange={(e) => setTitle(e.target.value)} value={title} className='form-control' />
@@ -125,10 +131,15 @@ return (
       <input type="text" onChange={(e) => setPrice(e.target.value)} value={price} className='form-control' />
       <input type="text" onChange={(e) => setDesc(e.target.value)} value={desc} className='form-control' />
       <button onClick={() => handleSubmit()}>Add</button>
+      <div className="d-flex">
+        
+        <button   className='btn btn-light btn-sm' onClick={() => setSort("price")}>Asc Price</button>
+        <button   className='btn btn-light btn-sm' onClick={() => setSort("-price")}>Desc price</button>
+        <button  className='btn btn-light btn-sm'  onClick={() => setSortRate("rating")}>Asc rating</button>
+        <button  className='btn btn-light btn-sm'  onClick={() => setSortRate("-rating")}>Desc rating</button>
+      </div>
       <div className="row">
 
-        <button onClick={() => setSort("asc")}>Asc</button>
-        <button onClick={() => setSort("desc")}>Desc</button>
         { 
         loading ? (
           <h2>loading...!</h2>
@@ -142,6 +153,8 @@ return (
               <div className="card-body">
                 <h5 className="card-title">{ele.title}</h5>
                 <p className="card-content">{ele.price}</p>
+                <p className="card-content badge text-bg-warning">{ele.rating}</p>
+                <p className="card-content">{ele.category}</p>
 
                 <button className="btn btn-light" onClick={() => delProduct(ele.id)}>Delete</button>
                 <button className="btn btn-light" onClick={() => editProduct(ele)}>Edit</button>
@@ -163,7 +176,7 @@ return (
         ruler={false}
         stepOnly={false}
 			min={0}
-			max={10}
+			max={100000}
 			step={1}
 			minValue={minValue}
 			maxValue={maxValue}
