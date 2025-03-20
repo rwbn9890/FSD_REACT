@@ -1,189 +1,45 @@
+import { useEffect, useState } from "react"
+import About from "./components/About"
+import Contact from "./components/Contact"
+import Home from "./components/Home"
+import Login from "./components/Login"
+import Navbar from "./components/Navbar"
+import Product from "./components/Product"
 
-import React, { useEffect, useState } from 'react'
-import './App.css'
-import MultiRangeSlider from "multi-range-slider-react";
-
+import {BrowserRouter, Route, Routes, useNavigate } from "react-router-dom"
 
 
 function App() {
-const [data, setData] =useState([])
-const [loading, setLoading] = useState(false)
-const [error, setError] = useState(null)
 
-const [search, setSearch] = useState("")
+  const navigate = useNavigate()
 
-const [title, setTitle] = useState("")
-const [image, setImage] = useState("")
-const [price, setPrice] = useState("")
-const [desc, setDesc] = useState("")
-const [editId, setEditId] = useState("");
-
-const [sort, setSort] = useState("")
-const [sortRate, setSortRate] = useState("")
-const [page, setPage] = useState(1)
-const [minValue, setMinValue] = useState(0)
-const [maxValue, setMaxValue] = useState(100000)
+  const [login, setLogin] = useState(false)
 
 
-
-
-let prod_url= `http://localhost:8000/prod`
-let users_url = `http://localhost:8000/users`
-
-
-
-  const fetchAndUpdateData = async (url, obj) =>{
-    setLoading(true);
-   try { 
-      const res = await fetch(url+`?_page=${page}&_per_page=5&price_gte=${minValue}&price_lte=${maxValue}&_sort=${sort},${sortRate}&_embed==admin`, obj);
-      const prod = await res.json();
-      setData(prod.data)
-
-    console.log(prod.data)
-   } catch (error) {
-      setError(error)
-      console.log("message: " + error)
-   } finally {
-    setLoading(false)
-   }
-  }
-
-  useEffect(() => {
-    fetchAndUpdateData(users_url, {})
-  }, [sort, page, minValue, maxValue, search, sortRate])
-
-  console.log(data)
-
-
-
-const handleSubmit = async() => {
-
-let obj = {
-  id:Math.round(Math.random()*1000),
-  title,
-  desc,
-  price,
-  images:[image]
-}
-
-
-
-    await fetch(`http://localhost:8000/users/${editId}`, {
-      method: editId ? "PATCH" : "POST",
-      body: JSON.stringify(obj),
-      headers:{
-        "Content-Type" : "application/json"
-      }
-    })
-    setEditId("")
-}
-
-
-  const editProduct = async (ele) => {
-    setEditId(ele.id)
-    setTitle(ele.title)
-    setPrice(ele.price)
-    setImage(ele.images[0])
-    setDesc(ele.description)
-
-
-    // let obj = {
-    //     title:"bhavangar bhujiya"
-    // }
-    // await fetch(`http://localhost:8000/users/${id}`, {
-    //   method: "PUT",
-    //   body: JSON.stringify(obj),
-    //   headers:{
-    //     "Content-Type" : "application/json"
-    //   }
-    // })
-    
-}
-
-
-
-  const delProduct = (id) => {
-    let obj = {
-      method:"DELETE",
-    }
-     fetchAndUpdateData(users_url+id, obj)
-  }
-
-
-
-  
-const handleInput = (e) => {
  
-  setMinValue(e.minValue)
-  setMaxValue(e.maxValue)
-}
 
+useEffect(() => { 
+  !JSON.parse(sessionStorage.getItem("login")) ? navigate('/') : ``
+},[])
 
 
 
 return (
     <>
-    <input onChange={(e) => setSearch(e.target.value)} />
-    <div className="container">
-      <h1 className='bg-amber-300 hover:text-white flex'>this is tailwind</h1>
-      <input type="text" onChange={(e) => setTitle(e.target.value)} value={title} className='form-control' />
-      <input type="text" onChange={(e) => setImage(e.target.value)} value={image} className='form-control' />
-      <input type="text" onChange={(e) => setPrice(e.target.value)} value={price} className='form-control' />
-      <input type="text" onChange={(e) => setDesc(e.target.value)} value={desc} className='form-control' />
-      <button onClick={() => handleSubmit()}>Add</button>
-      <div className="d-flex">
-        
-        <button   className='btn btn-light btn-sm' onClick={() => setSort("price")}>Asc Price</button>
-        <button   className='btn btn-light btn-sm' onClick={() => setSort("-price")}>Desc price</button>
-        <button  className='btn btn-light btn-sm'  onClick={() => setSortRate("rating")}>Asc rating</button>
-        <button  className='btn btn-light btn-sm'  onClick={() => setSortRate("-rating")}>Desc rating</button>
-      </div>
-      <div className="row">
 
-        { 
-        loading ? (
-          <h2>loading...!</h2>
-        ): error ?  (
-          <h2>Something went wrong</h2>
-        ) : (
-           data.map((ele) =>(
-            <div key={ele.id} className="col-3">
-            <div className="card">
-              <img src={ele.images[0]} alt="" className="card-img-top" />
-              <div className="card-body">
-                <h5 className="card-title">{ele.title}</h5>
-                <p className="card-content">{ele.price}</p>
-                <p className="card-content badge text-bg-warning">{ele.rating}</p>
-                <p className="card-content">{ele.category}</p>
 
-                <button className="btn btn-light" onClick={() => delProduct(ele.id)}>Delete</button>
-                <button className="btn btn-light" onClick={() => editProduct(ele)}>Edit</button>
-              </div>
-            </div>
-          </div>
-          ))
-        )
-         
-        }
-      </div>  
-   <button className="btn btn-light" onClick={() => setPage(page-1)}>prev</button>
-    <button>{page}</button>
-    <button className="btn btn-light" onClick={() => setPage(page+1)}>next</button>
-    </div>
+      <Navbar login={login} setLogin={setLogin}/>   
+      <Routes>
+        <Route path='/' element={ <Login  setLogin={setLogin} />}/>
+        <Route path='/home' element={ <Home/>} />
+        <Route path='/about' element={ <About/>} />
+        <Route path='/product' element={ <Product/>} />
+        <Route path='/contact' element={ <Contact/>} />
+      </Routes> 
 
-        <input onChange={(e) => setLimit(e.target.value)} min="0" max="10" type="range" />
-        <MultiRangeSlider
-        ruler={false}
-        stepOnly={false}
-			min={0}
-			max={100000}
-			step={1}
-			minValue={minValue}
-			maxValue={maxValue}
-			onInput={(e) => {
-				handleInput(e);
-			}}
-		/>
+
+
+
     </>
   )
 }
