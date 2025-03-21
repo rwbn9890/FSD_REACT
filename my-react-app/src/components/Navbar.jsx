@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Link, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 
 const Navbar = ({login, setLogin}) => {
 
@@ -22,22 +22,22 @@ const Navbar = ({login, setLogin}) => {
                              <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li className="nav-item">
                             <a className="nav-link active"  >
-                              <Link to='/home'> Home </Link> 
+                              <NavLink  className={({isActive}) => `nav-link ${isActive ? `text-danger fw-bold` : ``}`} to='/home'> Home </NavLink> 
                             </a>
                         </li>
                         <li className="nav-item">
                             <a class="nav-link" >
-                              <Link to='/about'>About</Link>  
+                              <NavLink  className={({isActive}) => `nav-link ${isActive ? `text-danger fw-bold` : ``}`} to='/about'>About</NavLink>  
                             </a>
                         </li>
                         <li class="nav-item">
                             <a className="nav-link " >
-                            <Link to="/product">Products</Link> 
+                            <NavLink  className={({isActive}) => `nav-link ${isActive ? `text-danger fw-bold` : ``}`} to="/product">Products</NavLink> 
                             </a>
                         </li>
                         <li class="nav-item">
                             <a className="nav-link text-decoration-none" >
-                              <Link to="/contact" >contact</Link>  
+                              <NavLink  className={({isActive}) => `nav-link ${isActive ? `text-danger fw-bold` : ``}`} to="/contact" >contact</NavLink>  
                             </a>
                         </li>
                         <li class="nav-item">
