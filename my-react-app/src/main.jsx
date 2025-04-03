@@ -7,13 +7,16 @@ import { BrowserRouter } from "react-router"
 
 import App from './App.jsx'
 import ApiContextProvider from './context/ApiContextProvider.jsx'
+import AuthProvider from './AuthContext/AuthProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <ApiContextProvider>
-        <App />
-      </ApiContextProvider>
+      <AuthProvider>
+        <ApiContextProvider>
+          <App />
+        </ApiContextProvider>
+      </AuthProvider>
     </BrowserRouter>
     
   </StrictMode>,

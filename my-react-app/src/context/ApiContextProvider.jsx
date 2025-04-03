@@ -15,7 +15,7 @@ const ApiContextProvider = ({children}) => {
 
   return (
 
-    <ApiContext.Provider value={{users, plen, ulen, setProducts, setUsers}}>
+    <ApiContext.Provider value={{products, users, plen, ulen, setProducts, setUsers}}>
         {children}
     </ApiContext.Provider>
   )

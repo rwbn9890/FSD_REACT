@@ -2,12 +2,14 @@ import { useContext } from "react"
 import Dashboard from "./Dashboard"
 import Products from "./pages/Products"
 import Users from "./pages/Users"
-import {Link, Route, Routes} from "react-router-dom"
+import {Link, NavLink, Route, Routes} from "react-router-dom"
 import { ApiContext } from "./context/ApiContext"
+import { AuthContext } from "./AuthContext/AuthProvider"
 
 function App() {
 
   const {users} = useContext(ApiContext)
+  const {tok} = useContext(AuthContext)
 
 
 
@@ -20,19 +22,23 @@ return (
         <h1 className='bg-slate-400 text-2xl font-bold'>Routing</h1>
       
     <div className="flex gap-4">
-      <Link to="/dash">Dashboard</Link>
-        <Link to="/products">Product</Link>
-        <Link to="/users">Users</Link>
+      <NavLink className={({isActive, isPending}) => isActive ? `text-red-400`  : isPending ? `text-green-600`  : `text-slate-800`} to="/dash">Dashboard</NavLink>
+     {tok ?
+      <NavLink className={({isActive, isPending}) => isActive ? `text-red-400`  : isPending ? `text-green-600`  : `text-slate-800`} to="/products">Product</NavLink>
+      :
+      <></>} 
+      <NavLink className={({isActive, isPending}) => isActive ? `text-red-400`  : isPending ? `text-green-600`  : `text-slate-800`} to="/users">Users</NavLink>
     </div>
         
        
   </div>
     </header>
 
-
     <Routes>
       <Route path="/:dash" element={<Dashboard/>}/>
+      {tok &&
       <Route path="/products" element={<Products/>}/>
+}
       <Route path="/users" element={<Users/>}/>
     </Routes>
 
