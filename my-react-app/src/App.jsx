@@ -5,6 +5,7 @@ import Users from "./pages/Users"
 import {Link, NavLink, Route, Routes} from "react-router-dom"
 import { ApiContext } from "./context/ApiContext"
 import { AuthContext } from "./AuthContext/AuthProvider"
+import ApiCall from "./ApiCall"
 
 function App() {
 
@@ -12,8 +13,7 @@ function App() {
   const {tok} = useContext(AuthContext)
 
 
-
-
+ 
 return (
     <>
 
@@ -23,10 +23,9 @@ return (
       
     <div className="flex gap-4">
       <NavLink className={({isActive, isPending}) => isActive ? `text-red-400`  : isPending ? `text-green-600`  : `text-slate-800`} to="/dash">Dashboard</NavLink>
-     {tok ?
+    
       <NavLink className={({isActive, isPending}) => isActive ? `text-red-400`  : isPending ? `text-green-600`  : `text-slate-800`} to="/products">Product</NavLink>
-      :
-      <></>} 
+     
       <NavLink className={({isActive, isPending}) => isActive ? `text-red-400`  : isPending ? `text-green-600`  : `text-slate-800`} to="/users">Users</NavLink>
     </div>
         
@@ -36,9 +35,9 @@ return (
 
     <Routes>
       <Route path="/:dash" element={<Dashboard/>}/>
-      {tok &&
+      
       <Route path="/products" element={<Products/>}/>
-}
+
       <Route path="/users" element={<Users/>}/>
     </Routes>
 
@@ -46,12 +45,16 @@ return (
      {
       users.map((ele)=>(
         <div className="shadow shadow-slate-500 rounded-2xl">
-        {/* <img src={ele.} alt="" /> */}
+        <img src={ele} alt="" /> 
         {ele.username}
       </div>
       ))
      }
-    </div>
+    </div> 
+
+
+
+    {/* <ApiCall/> */}
       
     </>
   )
