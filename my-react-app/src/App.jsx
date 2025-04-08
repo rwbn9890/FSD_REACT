@@ -1,62 +1,60 @@
-import { useContext } from "react"
-import Dashboard from "./Dashboard"
-import Products from "./pages/Products"
-import Users from "./pages/Users"
-import {Link, NavLink, Route, Routes} from "react-router-dom"
-import { ApiContext } from "./context/ApiContext"
-import { AuthContext } from "./AuthContext/AuthProvider"
-import ApiCall from "./ApiCall"
+import { useEffect, useState } from "react"
+import Input from "./component/Input"
+import SelectCurrency from "./component/SelectCurrency"
+import fetchApi from "./utilities/fetchApi"
 
 function App() {
 
-  const {users} = useContext(ApiContext)
-  const {tok} = useContext(AuthContext)
+  const [from, setFrom]  = useState("usd")
+  const [to, setTo]  = useState("inr")
+  const [amountFrom, setAmountFrom]  = useState(0)
+  const [amountTo, setAmountTo]  = useState(0)
+
+   const data = fetchApi(from, to)
+
+
+   const selectCurFrom = (e) => {
+    setFrom(e.target.value)
+   }
+
+   const selectCurTo = (e) => {
+    setTo(e.target.value)
+   }
+
+   
+   function changeAmountFrom(e){
+    let val  = e.target.value
+    setAmountFrom(val)
+    setAmountTo(data[to]*val)
+   }
+
+   const changeAmountTo = (e) => {
+    let val  = e.target.value
+    setAmountTo(val)
+    setAmountFrom(data[from])
+    console.log(data[from])
+   }
 
 
  
 return (
-    <>
+    <div className="h-lvh flex justify-center items-center">
 
-<header className='shadow '>
-      <div className="container mx-auto flex justify-between p-3">
-        <h1 className='bg-slate-400 text-2xl font-bold'>Routing</h1>
-      
-    <div className="flex gap-4">
-      <NavLink className={({isActive, isPending}) => isActive ? `text-red-400`  : isPending ? `text-green-600`  : `text-slate-800`} to="/dash">Dashboard</NavLink>
-    
-      <NavLink className={({isActive, isPending}) => isActive ? `text-red-400`  : isPending ? `text-green-600`  : `text-slate-800`} to="/products">Product</NavLink>
-     
-      <NavLink className={({isActive, isPending}) => isActive ? `text-red-400`  : isPending ? `text-green-600`  : `text-slate-800`} to="/users">Users</NavLink>
+    <div className=" w-3xl m-auto shadow rounded shadow-slate-900 p-4">
+
+       <div className="shadow shadow-blue-400 p-10 m-2 flex justify-between">
+        <label htmlFor="">From</label>
+          <Input place={from} changeAmount={changeAmountFrom} amount={amountFrom}/>
+          <SelectCurrency selectCur={selectCurFrom} data={data}/>
+       </div>
+       <div className="shadow shadow-blue-400 p-10 m-2 flex justify-between">
+        <label htmlFor="">To</label>
+          <Input place={to} changeAmount={changeAmountTo} amount={amountTo}/>
+          <SelectCurrency selectCur={selectCurTo} data={data}/>
+       </div>
+
     </div>
-        
-       
-  </div>
-    </header>
-
-    <Routes>
-      <Route path="/:dash" element={<Dashboard/>}/>
-      
-      <Route path="/products" element={<Products/>}/>
-
-      <Route path="/users" element={<Users/>}/>
-    </Routes>
-
-    <div className="max-w-5xl mx-auto grid grid-cols-4">
-     {
-      users.map((ele)=>(
-        <div className="shadow shadow-slate-500 rounded-2xl">
-        <img src={ele} alt="" /> 
-        {ele.username}
-      </div>
-      ))
-     }
-    </div> 
-
-
-
-    {/* <ApiCall/> */}
-      
-    </>
+    </div>
   )
 }
 
