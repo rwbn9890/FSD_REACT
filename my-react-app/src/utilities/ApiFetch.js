@@ -8,11 +8,10 @@ const useApiFetch = (url) => {
 
     const fetchData = async () => {
         try {
-            let res = await fetch(url)
+            let res = await axios.get(url)
             let resp = await res.json()
             setData(resp)
             console.log(resp)
-          
         }
          catch (error) {
             setError(true)

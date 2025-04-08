@@ -1,2 +1,11 @@
 
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark * ));
+
+@custom-variant forest (&:where(.forest, .forest * ));
+
+
+body * {
+    @apply transition-all duration-300
+}
