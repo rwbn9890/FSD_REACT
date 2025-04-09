@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react'
 const fetchApi = (from, to) => {
 
     const [data, setData] = useState({})
-
-    
  
     useEffect(() => {
         if(from)
@@ -14,7 +12,7 @@ const fetchApi = (from, to) => {
                 console.log(res[from])
                 setData(res[from])
             })
-        },[from, to])
+        },[from,to])
 
       
     return data;
