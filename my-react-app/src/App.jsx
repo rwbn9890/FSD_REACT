@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react"
-import ControlComp from "./component/ControlComp"
-import UseRef from "./component/UseRef"
-import Optimize from "./component/Optimize"
+import { useEffect, useMemo, useState } from "react"
+import UseMemo from "./component/UseMemo"
+import UseCallBack from "./component/UseCallBack"
 
 
 function App() {
 
   return (
-  //  <ControlComp/>
-  // <UseRef/>
-  <Optimize/>
+    <>
+    <div>
+
+<UseCallBack/>
+      {/* <UseMemo/> */}
+    </div>
+  </>
   )
 }
 
